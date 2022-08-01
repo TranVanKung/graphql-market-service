@@ -1,0 +1,35 @@
+version: '3'
+services:
+  market_service:
+    container_name: market_service
+    restart: always
+    build: .
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+    ports:
+      - 3001:3001
+    networks:
+      - market_service_network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - market_database
+
+  market_database:
+    container_name: market_database
+    image: mongo
+    ports:
+      - 27018:27017
+    networks:
+      - market_service_network
+    volumes:
+      - market_database:/data/db
+
+networks:
+  market_service_network:
+    driver: bridge
+
+volumes:
+  market_database:
